@@ -53,6 +53,11 @@ jobs:
         shell: pwsh
         run: |
           if (-not (Test-Path "C:\Program Files (x86)\Inno Setup 6\ISCC.exe")) { choco install innosetup --no-progress -y }
+          # Simplified Chinese is an "unofficial" Inno Setup translation: fetch it from the Inno Setup repo.
+          $lang = "C:\Program Files (x86)\Inno Setup 6\Languages\ChineseSimplified.isl"
+          if (-not (Test-Path $lang)) {
+            Invoke-WebRequest "https://raw.githubusercontent.com/jrsoftware/issrc/main/Files/Languages/Unofficial/ChineseSimplified.isl" -OutFile $lang
+          }
           & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" /Q "/DAppVersion=$env:VERSION" "/DStage=$PWD\build\win-stage" win\installer\MDReader.iss
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
