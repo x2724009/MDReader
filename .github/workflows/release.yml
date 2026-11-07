@@ -36,7 +36,7 @@ jobs:
       - name: Build (MSVC)
         shell: pwsh
         run: |
-          cmake -S win -B build/win -A x64 -DWEBVIEW2_DIR="$PWD/wv2"
+          cmake -S win -B build/win -A x64 -DWEBVIEW2_DIR="$PWD/wv2" -DAPP_VERSION="$env:VERSION"
           cmake --build build/win --config Release
 
       - name: Stage files
@@ -77,7 +77,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Tools
-        run: brew install xcodegen
+        run: |
+          brew install xcodegen
+          python3 -m pip install --user --break-system-packages dmgbuild
       - name: Build DMG
         run: ./scripts/package-mac.sh
       - uses: actions/upload-artifact@v4

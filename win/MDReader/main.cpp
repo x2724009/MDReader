@@ -10,6 +10,7 @@
 #include <wrl.h>
 
 #include <algorithm>
+#include <cstring>
 #include <string>
 #include <vector>
 
@@ -18,6 +19,10 @@
 
 using Microsoft::WRL::Callback;
 using Microsoft::WRL::ComPtr;
+
+#ifndef MDREADER_VERSION
+#define MDREADER_VERSION "dev"
+#endif
 
 namespace {
 
@@ -591,7 +596,9 @@ void OnMessage(const JVal& m) {
     if (type == L"ready") {
         g_ready = true;
         if (g_path.empty()) {
-            Exec(L"MDStart.configure(" + SettingsJson() + L"); MDStart.setVersion(\"1.0.0\")");
+            const char* v = MDREADER_VERSION;
+            Exec(L"MDStart.configure(" + SettingsJson() + L"); MDStart.setVersion(" +
+                 JsonStr(std::wstring(v, v + strlen(v))) + L")");
             SendRecents();
         } else {
             Exec(L"MDReader.configure(" + SettingsJson() + L", false)");

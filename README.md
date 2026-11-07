@@ -60,7 +60,13 @@
 
 到 [Releases](https://github.com/x2724009/MDReader/releases/latest) 下载：
 
-- **macOS**：`MDReader-x.y.z-mac.dmg`（Apple 芯片 + Intel 通用）。拖到「应用程序」。
+- **macOS 一行安装（推荐）**：打开「终端」粘贴下面这行，自动下载最新版并安装，打开时不会被系统拦截：
+
+  ```bash
+  curl -fsSL https://raw.githubusercontent.com/x2724009/MDReader/main/install.sh | bash
+  ```
+
+- **macOS DMG**：`MDReader-x.y.z-mac.dmg`（Apple 芯片 + Intel 通用）。打开后按窗口里的引导，把 MDReader 拖到「应用程序」。
   应用未经 Apple 公证，首次打开会被系统拦截，任选一种方式放行：
   1. 双击打开一次 → 打开「系统设置 → 隐私与安全性」，在页面底部点「仍要打开」；或
   2. 在终端执行 `xattr -dr com.apple.quarantine /Applications/MDReader.app`。
@@ -134,7 +140,7 @@ win/installer      Inno Setup 安装脚本
 - Outline + file-browser sidebar with breadcrumb; hover the left edge to peek, auto-hides after 3 s.
 - Live reload on external changes, export to PDF, print, recent files, drag & drop, welcome page, tabs (macOS).
 
-**Install** — grab the latest build from [Releases](https://github.com/x2724009/MDReader/releases/latest):
+**Install** — on macOS the easiest way is `curl -fsSL https://raw.githubusercontent.com/x2724009/MDReader/main/install.sh | bash` (no Gatekeeper prompt). Or grab the latest build from [Releases](https://github.com/x2724009/MDReader/releases/latest):
 `MDReader-x.y.z-mac.dmg` (universal) or `MDReader-x.y.z-win-x64-setup.exe` / portable zip.
 Builds are not notarized/code-signed. On macOS, open the app once, then click “Open Anyway” in System Settings → Privacy & Security (or run `xattr -dr com.apple.quarantine /Applications/MDReader.app`); right-click → Open no longer works on macOS 15+. On Windows choose “More info → Run anyway”.
 

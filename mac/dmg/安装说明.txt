@@ -1,0 +1,32 @@
+MDReader 安装说明 / Installation
+================================
+
+1. 把 MDReader 拖到「应用程序」(Applications)。
+
+2. 首次打开如果被系统拦截（MDReader 暂未经过 Apple 公证），任选一种方式放行，只需一次：
+
+   方式 A：系统设置
+     · 在「应用程序」里双击打开 MDReader，出现提示时点「完成」
+     · 打开「系统设置 › 隐私与安全性」，滚动到最底部
+     · 在 MDReader 那一行点「仍要打开」，按提示输入密码
+
+   方式 B：终端（打开「终端」App，粘贴下面这行后回车）
+
+     xattr -dr com.apple.quarantine /Applications/MDReader.app
+
+   方式 C：以后用一行命令安装 / 升级（下载的文件不会被拦截）
+
+     curl -fsSL https://raw.githubusercontent.com/x2724009/MDReader/main/install.sh | bash
+
+3. Finder 中 .md 文件的缩略图如果没出现：注销后重新登录一次即可。
+
+--------------------------------------------------------------------
+English
+1. Drag MDReader to Applications.
+2. If macOS blocks the first launch (the app isn't notarized yet): open it once,
+   then System Settings › Privacy & Security › "Open Anyway". Or run in Terminal:
+     xattr -dr com.apple.quarantine /Applications/MDReader.app
+   Or install/upgrade with:
+     curl -fsSL https://raw.githubusercontent.com/x2724009/MDReader/main/install.sh | bash
+
+Project & updates: https://github.com/x2724009/MDReader
