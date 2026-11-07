@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy"
+      content="default-src 'none'; script-src 'self' file: https://mdreader.local; style-src 'self' file: https://mdreader.local 'unsafe-inline'; img-src * data: blob: file:; media-src * data: blob: file:; font-src 'self' file: data: https://mdreader.local;">
+<title>MDReader</title>
+<link rel="stylesheet" href="reader.css">
+<link rel="stylesheet" href="shell.css">
+</head>
+<body class="app loading show-toc">
+<div class="app-shell">
+  <div class="edge-zone" id="edge-zone" aria-hidden="true"><div class="edge-handle" id="edge-handle"></div></div>
+  <nav class="toc" id="toc" aria-label="Sidebar">
+    <div class="side-head">
+      <div class="tabs" id="tabs" role="tablist">
+        <span class="tab-pill" id="tab-pill"></span>
+        <button class="tab active" data-tab="outline" id="tab-outline" role="tab">目录</button>
+        <button class="tab" data-tab="files" id="tab-files" role="tab">文件</button>
+      </div>
+      <button class="pin" id="pin" title="固定侧栏">
+        <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M9.8 1.6 14.4 6.2l-1.1 1.1-.9-.3-2.6 2.6.3 2.4-1 1-2.7-2.7L3 13.7l-.7-.7 3.4-3.4L3 6.9l1-1 2.4.3L9 3.6l-.3-.9z" fill="currentColor"/></svg>
+      </button>
+    </div>
+    <div class="side-views">
+      <div class="side-view toc-list active" id="toc-list" data-view="outline"></div>
+      <div class="side-view files" id="files" data-view="files">
+        <div class="crumbs" id="crumbs"></div>
+        <div class="file-list" id="file-list"></div>
+      </div>
+    </div>
+  </nav>
+  <div class="stage" id="stage">
+    <section class="pane editor-pane" id="editor-pane" aria-label="Editor">
+      <div class="editor-wrap">
+        <pre class="editor-hl" id="editor-hl" aria-hidden="true"></pre>
+        <textarea class="editor" id="editor" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off"></textarea>
+      </div>
+    </section>
+    <section class="pane preview-pane" id="preview-pane">
+      <div class="skeleton" aria-hidden="true"><i class="h"></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <article class="markdown-body" id="content"></article>
+    </section>
+    <div class="top-shade" id="top-shade"></div>
+  </div>
+  <div class="findbar" id="findbar">
+    <input id="find-input" type="search" placeholder="查找" autocomplete="off" spellcheck="false">
+    <span class="count" id="find-count"></span>
+    <button id="find-prev" title="上一个 (⇧↩)">↑</button>
+    <button id="find-next" title="下一个 (↩)">↓</button>
+    <button id="find-close" title="关闭 (Esc)">✕</button>
+  </div>
+  <div class="toast" id="toast"></div>
+</div>
+<script src="vendor/marked.min.js"></script>
+<script src="vendor/highlight.min.js"></script>
+<script src="render-core.js"></script>
+<script src="editor.js"></script>
+<script src="reader.js"></script>
+<script src="shell.js"></script>
+</body>
+</html>

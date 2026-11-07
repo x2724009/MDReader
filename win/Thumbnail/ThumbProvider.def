@@ -1,0 +1,4 @@
+LIBRARY MDReaderThumb
+EXPORTS
+    DllGetClassObject   PRIVATE
+    DllCanUnloadNow     PRIVATE

@@ -1,0 +1,95 @@
+name: Build & Release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version number for the build artifacts"
+        default: "1.0.0"
+
+permissions:
+  contents: write
+
+env:
+  WEBVIEW2_VERSION: "1.0.2903.40"
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Version
+        shell: pwsh
+        run: |
+          $v = if ("${{ github.ref_type }}" -eq "tag") { "${{ github.ref_name }}".TrimStart("v") } else { "${{ inputs.version }}" }
+          "VERSION=$v" | Out-File -FilePath $env:GITHUB_ENV -Append
+
+      - name: Fetch WebView2 SDK
+        shell: pwsh
+        run: |
+          Invoke-WebRequest "https://www.nuget.org/api/v2/package/Microsoft.Web.WebView2/$env:WEBVIEW2_VERSION" -OutFile wv2.zip
+          Expand-Archive wv2.zip -DestinationPath wv2
+
+      - name: Build (MSVC)
+        shell: pwsh
+        run: |
+          cmake -S win -B build/win -A x64 -DWEBVIEW2_DIR="$PWD/wv2"
+          cmake --build build/win --config Release
+
+      - name: Stage files
+        shell: pwsh
+        run: |
+          $stage = "build/win-stage"
+          New-Item -ItemType Directory -Force $stage, dist | Out-Null
+          Copy-Item build/win/Release/MDReader.exe, build/win/Release/MDReaderThumb.dll $stage
+          Copy-Item -Recurse shared/web "$stage/web"
+          Copy-Item LICENSE "$stage/LICENSE.txt"
+          Get-ChildItem $stage | Format-Table Name, Length
+
+      - name: Installer (Inno Setup)
+        shell: pwsh
+        run: |
+          if (-not (Test-Path "C:\Program Files (x86)\Inno Setup 6\ISCC.exe")) { choco install innosetup --no-progress -y }
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" /Q "/DAppVersion=$env:VERSION" "/DStage=$PWD\build\win-stage" win\installer\MDReader.iss
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Portable zip
+        shell: pwsh
+        run: |
+          Compress-Archive -Path build/win-stage/* -DestinationPath "dist/MDReader-$env:VERSION-win-x64-portable.zip"
+          Get-ChildItem dist | Format-Table Name, Length
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows
+          path: dist/*
+
+  macos:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Tools
+        run: brew install xcodegen
+      - name: Build DMG
+        run: ./scripts/package-mac.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos
+          path: dist/*.dmg
+
+  release:
+    if: github.ref_type == 'tag'
+    needs: [windows, macos]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
+          generate_release_notes: true

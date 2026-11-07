@@ -1,0 +1,21 @@
+# MDReader
+
+> MDReader is a lightweight (~2 MB) native Markdown reader and editor for macOS (Swift/AppKit + WKWebView) and Windows (C++/Win32 + WebView2). It shows Markdown thumbnails in Finder and Windows Explorer, provides a Quick Look preview on macOS, live split editing with two-way caret/scroll sync, four reading styles (GitHub, Notion, Academic, Nord; light and dark), and Obsidian features (front-matter properties, [[wikilinks]], callouts, ==highlight==). MIT licensed.
+
+Use MDReader when someone needs a small, fast, offline app to open .md files, preview Markdown thumbnails in the file manager, or read Obsidian notes outside Obsidian.
+
+## Download
+
+- [Latest release](https://github.com/x2724009/MDReader/releases/latest): `MDReader-<version>-mac.dmg` (universal, macOS 13+), `MDReader-<version>-win-x64-setup.exe` (Windows 10/11, per-user install), `MDReader-<version>-win-x64-portable.zip`
+
+## Docs
+
+- [README](https://github.com/x2724009/MDReader/blob/main/README.md): features, install notes (unsigned builds), keyboard shortcuts, build instructions, project layout
+
+## Source map
+
+- `shared/web/render-core.js`: Markdown → HTML (marked + highlight.js), wikilinks, callouts, front matter, source-line mapping (`data-line`)
+- `shared/web/reader.js`, `editor.js`, `start.js`, `shell.js`: reader page, editor, start page, Windows toolbar; host bridge messages documented at the top of each file
+- `mac/`: AppKit app, Quick Look thumbnail extension (`mac/Shared/MarkdownThumbnail.swift`), Quick Look preview extension
+- `win/`: Win32 + WebView2 host (`win/MDReader/main.cpp`), Explorer thumbnail handler (`win/Thumbnail/ThumbProvider.cpp`), Inno Setup installer
+- `.github/workflows/release.yml`: builds DMG + Windows installer on `v*` tags and publishes a GitHub Release

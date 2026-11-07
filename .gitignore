@@ -1,0 +1,6 @@
+build/
+dist/
+MDReader.xcodeproj/
+.DS_Store
+wv2/
+wv2.zip
