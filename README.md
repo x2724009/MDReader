@@ -61,8 +61,10 @@
 到 [Releases](https://github.com/x2724009/MDReader/releases/latest) 下载：
 
 - **macOS**：`MDReader-x.y.z-mac.dmg`（Apple 芯片 + Intel 通用）。拖到「应用程序」。
-  首次打开如提示“无法验证开发者”：在 Finder 中右键 → 打开，或执行
-  `xattr -dr com.apple.quarantine /Applications/MDReader.app`（应用未经 Apple 公证）。
+  应用未经 Apple 公证，首次打开会被系统拦截，任选一种方式放行：
+  1. 双击打开一次 → 打开「系统设置 → 隐私与安全性」，在页面底部点「仍要打开」；或
+  2. 在终端执行 `xattr -dr com.apple.quarantine /Applications/MDReader.app`。
+  （macOS 15 及以后，Finder 中「右键 → 打开」已不再能放行。）
   缩略图不出现时执行 `qlmanage -r && qlmanage -r cache` 或注销一次。
 - **Windows**：`MDReader-x.y.z-win-x64-setup.exe`（无需管理员权限），或便携版 `…-portable.zip`。
   需要 Microsoft Edge WebView2 运行时（Windows 10/11 通常已自带，缺失时安装程序会引导下载）。
@@ -134,7 +136,7 @@ win/installer      Inno Setup 安装脚本
 
 **Install** — grab the latest build from [Releases](https://github.com/x2724009/MDReader/releases/latest):
 `MDReader-x.y.z-mac.dmg` (universal) or `MDReader-x.y.z-win-x64-setup.exe` / portable zip.
-Builds are not notarized/code-signed: on macOS use right-click → Open the first time; on Windows choose “More info → Run anyway”.
+Builds are not notarized/code-signed. On macOS, open the app once, then click “Open Anyway” in System Settings → Privacy & Security (or run `xattr -dr com.apple.quarantine /Applications/MDReader.app`); right-click → Open no longer works on macOS 15+. On Windows choose “More info → Run anyway”.
 
 **Build** — see the commands above (`scripts/build-mac.sh`, CMake for Windows). Tagging `vX.Y.Z` triggers the release workflow.
 

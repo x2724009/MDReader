@@ -20,11 +20,16 @@ rm -rf build/Release && mkdir -p build/Release
 ditto --noextattr --norsrc "$DD/Build/Products/Release/MDReader.app" build/Release/MDReader.app
 echo "Built: build/Release/MDReader.app ($(du -sh build/Release/MDReader.app | cut -f1))"
 
+# Build copies share the installed app's bundle ID. If LaunchServices keeps them registered,
+# the Apps/Launchpad grid may pick a build copy (not in /Applications) and hide the app.
+LSREG=/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister
+"$LSREG" -u "$DD/Build/Products/Release/MDReader.app" 2>/dev/null || true
+"$LSREG" -u "$PWD/build/Release/MDReader.app" 2>/dev/null || true
+
 if [ "${1:-}" = "--install" ]; then
   osascript -e 'quit app "MDReader"' 2>/dev/null || true
   rm -rf /Applications/MDReader.app
   ditto "$DD/Build/Products/Release/MDReader.app" /Applications/MDReader.app
-  LSREG=/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister
   "$LSREG" -f -R /Applications/MDReader.app
   pluginkit -a /Applications/MDReader.app/Contents/PlugIns/MDReaderThumbnail.appex
   pluginkit -a /Applications/MDReader.app/Contents/PlugIns/MDReaderPreview.appex
