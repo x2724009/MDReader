@@ -101,7 +101,7 @@ std::wstring UrlPath(const std::wstring& path) {
     return out;
 }
 
-std::wstring UrlUnescape(std::wstring s) {
+std::wstring UnescapeUrl(std::wstring s) {
     std::vector<wchar_t> buf(s.begin(), s.end());
     buf.push_back(0);
     DWORD n = static_cast<DWORD>(buf.size());
@@ -660,7 +660,7 @@ bool HandleNavigation(const std::wstring& uri) {
         std::wstring rest = uri.substr(docPrefix.size());
         size_t cut = rest.find_first_of(L"?#");
         if (cut != std::wstring::npos) rest = rest.substr(0, cut);
-        path = g_docRoot + UrlUnescape(rest);
+        path = g_docRoot + UnescapeUrl(rest);
         std::replace(path.begin(), path.end(), L'/', L'\\');
     } else if (uri.rfind(L"file:", 0) == 0) {
         wchar_t buf[MAX_PATH * 2];
